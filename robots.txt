@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /gio-hang
+Disallow: /dat-hang
+Disallow: /admin-album
+
+Sitemap: https://greennest.vn/sitemap.xml
