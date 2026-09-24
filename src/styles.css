@@ -273,6 +273,15 @@ button:not(.remove-btn):not(.cart-item-actions button) {
   flex-wrap: wrap;
 }
 
+.hero-actions-below {
+  justify-content: center;
+  margin: 18px 0 0;
+}
+
+.hero-actions-below .secondary-btn {
+  border: 1px solid var(--border);
+}
+
 .stats-strip {
   display: grid;
   grid-template-columns: repeat(3, minmax(120px, 1fr));
@@ -331,15 +340,7 @@ button:not(.remove-btn):not(.cart-item-actions button) {
 }
 
 .slide-overlay {
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
-  background: rgba(12, 27, 20, 0.4);
-  backdrop-filter: blur(8px);
-  color: white;
-  border-radius: 18px;
-  padding: 16px 18px;
+  display: none;
 }
 
 .slide-overlay span {
@@ -738,6 +739,29 @@ button:not(.remove-btn):not(.cart-item-actions button) {
   font-size: 0.78rem;
 }
 
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.rating-stars {
+  color: #b66a1c;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.product-review-snippet {
+  min-height: auto !important;
+  margin: 8px 0 0 !important;
+  color: var(--muted);
+  font-size: 0.83rem;
+  font-style: italic;
+}
+
 .product-meta,
 .product-badges {
   display: flex;
@@ -943,6 +967,91 @@ button:not(.remove-btn):not(.cart-item-actions button) {
 
 .related-products {
   margin-top: 36px;
+}
+
+.product-reviews {
+  margin-top: 38px;
+}
+
+.review-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(270px, 0.8fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.review-list {
+  display: grid;
+  gap: 12px;
+}
+
+.review-item,
+.review-form {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: white;
+  box-shadow: var(--shadow);
+}
+
+.review-item {
+  padding: 16px 18px;
+}
+
+.review-item > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.review-item p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.muted-stars {
+  color: #d6dfd8;
+}
+
+.review-form {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+}
+
+.review-form h3 {
+  margin: 0;
+}
+
+.review-form label {
+  font-weight: 700;
+}
+
+.review-form textarea {
+  min-height: 112px;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.8rem 0.9rem;
+  color: var(--text);
+}
+
+.star-picker {
+  display: flex;
+  gap: 4px;
+}
+
+.star-button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: #cfd9d2;
+  background: transparent !important;
+}
+
+.star-button.selected,
+.star-button:hover {
+  color: #b66a1c;
 }
 
 .compact-header {
@@ -1256,6 +1365,13 @@ button:not(.remove-btn):not(.cart-item-actions button) {
 
 .footer-links {
   grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 24px;
+}
+
+.footer-links > div {
+  display: grid;
+  align-content: start;
+  gap: 10px;
 }
 
 .site-footer h4 {
@@ -1272,6 +1388,46 @@ button:not(.remove-btn):not(.cart-item-actions button) {
 .site-footer a:hover {
   color: var(--primary-dark);
 }
+
+.floating-contact {
+  position: fixed;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(22px, env(safe-area-inset-bottom));
+  z-index: 30;
+  display: grid;
+  gap: 10px;
+}
+
+.floating-contact-button {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  color: white;
+  box-shadow: 0 10px 24px rgba(18, 54, 36, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.floating-contact-button:hover,
+.floating-contact-button:focus-visible {
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px rgba(18, 54, 36, 0.26);
+}
+
+.floating-contact-button:focus-visible,
+.star-button:focus-visible {
+  outline: 3px solid #1d513c;
+  outline-offset: 3px;
+}
+
+.floating-contact-button.phone { background: #1f7a4d; }
+.floating-contact-button.zalo { background: #1672d2; }
+.floating-contact-button.facebook { background: #315c9d; }
+.floating-contact-button.whatsapp { background: #1f9a5c; }
 
 @media (max-width: 800px) {
   .topbar,
@@ -1290,9 +1446,13 @@ button:not(.remove-btn):not(.cart-item-actions button) {
   }
 
   .nav {
-    display: grid;
-    justify-content: start;
-    gap: 8px;
+    display: flex;
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 16px;
+    padding-bottom: 4px;
+    white-space: nowrap;
   }
 
   .about-metrics,
@@ -1321,7 +1481,7 @@ button:not(.remove-btn):not(.cart-item-actions button) {
   }
 
   .company-hero .hero-slider {
-    height: 560px;
+    height: 440px;
     min-height: 0;
   }
 
@@ -1335,6 +1495,10 @@ button:not(.remove-btn):not(.cart-item-actions button) {
     font-size: clamp(2rem, 10vw, 3.2rem);
   }
 
+  .review-layout {
+    grid-template-columns: 1fr;
+  }
+
   .feature-showcase {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1346,6 +1510,23 @@ button:not(.remove-btn):not(.cart-item-actions button) {
   }
 
   .company-hero .hero-slider {
-    height: 600px;
+    height: 400px;
+  }
+
+  .footer-links {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions-below {
+    justify-content: stretch;
+  }
+
+  .hero-actions-below a {
+    flex: 1 1 100%;
+  }
+
+  .floating-contact-button {
+    width: 44px;
+    height: 44px;
   }
 }

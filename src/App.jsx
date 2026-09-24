@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, NavLink, Route, Routes, useLocation, useParams } from 'react-router-dom';
+import { MessageCircle, Phone, Send, Share2, Star } from 'lucide-react';
 
 const products = [
   {
@@ -92,6 +93,34 @@ const accessoryProducts = [
 ];
 
 const allProducts = [...products, ...accessoryProducts];
+
+const productReviews = {
+  1: [{ name: 'Minh Anh', rating: 5, comment: 'Cây khỏe, đóng gói cẩn thận và hợp với góc làm việc.' }],
+  2: [{ name: 'Thu Hà', rating: 5, comment: 'Cây đẹp, nhân viên tư vấn vị trí đặt cây rất kỹ.' }],
+  3: [{ name: 'Gia Hân', rating: 4, comment: 'Chậu hoàn thiện đẹp, màu trắng dễ phối với nội thất.' }],
+  4: [{ name: 'Quang Duy', rating: 5, comment: 'Bộ dụng cụ đầy đủ và tiện cho người mới trồng cây.' }],
+  5: [{ name: 'Ngọc Lan', rating: 5, comment: 'Hoa tươi, gói quà chỉn chu và giao đúng hẹn.' }],
+  6: [{ name: 'Khánh Linh', rating: 5, comment: 'Hộp quà xinh, người nhận rất thích.' }],
+  101: [{ name: 'Hoàng Nam', rating: 4, comment: 'Dễ dùng, phù hợp khi thay chậu cây.' }],
+  102: [{ name: 'Mai Phương', rating: 5, comment: 'Sản phẩm đúng mô tả, giao nhanh.' }],
+  103: [{ name: 'Bảo Trâm', rating: 5, comment: 'Đất tơi xốp, cây bén rễ tốt.' }],
+  104: [{ name: 'Đức Thành', rating: 4, comment: 'Chậu nhẹ và chắc, dùng rất ổn.' }],
+};
+
+function getProductReviews(productId) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(`greennest-reviews-${productId}`) || '[]');
+    return [...(productReviews[productId] || []), ...(Array.isArray(saved) ? saved : [])];
+  } catch {
+    return productReviews[productId] || [];
+  }
+}
+
+function getRatingSummary(productId) {
+  const reviews = productReviews[productId] || [];
+  const rating = reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length || 5;
+  return { rating, count: reviews.length };
+}
 
 const serviceLinks = [
   { title: 'Thiết kế cảnh quan', description: 'Tư vấn sân vườn, biệt thự, đường phố, trường học và văn phòng.', icon: '01' },
@@ -198,7 +227,7 @@ const featuredTabs = {
 
 const siteUrl = 'https://greennest.vn';
 const seoPages = {
-  '/': { title: 'GreenNest | Cây cảnh, chậu decor và quà tặng xanh', description: 'GreenNest cung cấp cây cảnh, chậu decor, vật tư trồng cây và quà tặng xanh cho nhà ở, văn phòng tại Đà Nẵng.' },
+  '/': { title: 'GreenNest | Cây cảnh, chậu decor và quà tặng xanh tại Đà Lạt', description: 'GreenNest cung cấp cây cảnh, chậu decor, vật tư trồng cây và quà tặng xanh cho nhà ở, văn phòng tại Đà Lạt, Lâm Đồng.' },
   '/cua-hang': { title: 'Cửa hàng cây cảnh và phụ kiện | GreenNest', description: 'Khám phá cây cảnh, chậu decor, dụng cụ trồng cây và hộp quà xanh được tuyển chọn bởi GreenNest.' },
   '/cay-canh': { title: 'Cây cảnh trong nhà và văn phòng | GreenNest', description: 'Mua cây cảnh dễ chăm sóc, phù hợp phòng khách, ban công và văn phòng tại GreenNest.' },
   '/chau-vat-tu': { title: 'Chậu cây và vật tư trồng cây | GreenNest', description: 'Chọn chậu cây, đất trồng và dụng cụ chăm sóc cây chất lượng cho không gian sống xanh.' },
@@ -207,7 +236,7 @@ const seoPages = {
   '/thu-vien': { title: 'Thư viện không gian xanh | GreenNest', description: 'Xem cảm hứng trang trí nhà ở, văn phòng và các góc xanh với cây cảnh GreenNest.' },
   '/bai-viet': { title: 'Bài viết chăm sóc cây cảnh | GreenNest', description: 'Mẹo chăm cây trong nhà, chọn cây theo ánh sáng và trang trí không gian sống từ GreenNest.' },
   '/gioi-thieu': { title: 'Giới thiệu GreenNest | Cửa hàng cây cảnh', description: 'Tìm hiểu GreenNest, cửa hàng cây cảnh và phụ kiện trồng cây dành cho không gian sống hiện đại.' },
-  '/lien-he': { title: 'Liên hệ GreenNest | Cây cảnh tại Đà Nẵng', description: 'Liên hệ GreenNest để được tư vấn cây cảnh, quà tặng xanh và dịch vụ thiết kế không gian xanh.' },
+  '/lien-he': { title: 'Liên hệ GreenNest | Cây cảnh tại Đà Lạt', description: 'Liên hệ GreenNest tại Đà Lạt để được tư vấn cây cảnh, quà tặng xanh và dịch vụ thiết kế không gian xanh.' },
   '/truyen-thong': { title: 'Truyền thông doanh nghiệp | Đà Lạt New', description: 'Thư viện video, bài hát và nội dung truyền thông doanh nghiệp Đà Lạt New.' },
   '/chinh-sach': { title: 'Chính sách mua hàng | Đà Lạt New', description: 'Thông tin giao nhận, thanh toán, đổi trả, bảo mật và điều khoản mua hàng.' },
 };
@@ -251,9 +280,10 @@ function SeoHead() {
     setMeta('twitter:card', 'summary_large_image');
     setMeta('twitter:title', page.title);
     setMeta('twitter:description', page.description);
+    const reviewSummary = product ? getRatingSummary(product.id) : null;
     const structuredData = product
-      ? { '@context': 'https://schema.org', '@type': 'Product', name: product.name, description: product.description, image: [product.image], sku: `GN-${product.id}`, brand: { '@type': 'Brand', name: 'GreenNest' }, offers: { '@type': 'Offer', url: canonicalUrl, priceCurrency: 'VND', price: product.price, availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' } }
-      : { '@context': 'https://schema.org', '@type': 'LocalBusiness', name: 'CÔNG TY TNHH SX TM DV ĐÀ LẠT NEW', url: siteUrl, description: page.description, address: { '@type': 'PostalAddress', streetAddress: 'Thôn Tân Lợi', addressLocality: 'Xã Đinh Văn Lâm Hà', addressRegion: 'Tỉnh Lâm Đồng', addressCountry: 'VN' } };
+      ? { '@context': 'https://schema.org', '@type': 'Product', name: product.name, description: product.description, image: [product.image], sku: `GN-${product.id}`, brand: { '@type': 'Brand', name: 'GreenNest' }, aggregateRating: { '@type': 'AggregateRating', ratingValue: reviewSummary.rating.toFixed(1), reviewCount: reviewSummary.count }, review: (productReviews[product.id] || []).map((review) => ({ '@type': 'Review', author: { '@type': 'Person', name: review.name }, reviewRating: { '@type': 'Rating', ratingValue: review.rating, bestRating: 5 }, reviewBody: review.comment })), offers: { '@type': 'Offer', url: canonicalUrl, priceCurrency: 'VND', price: product.price, availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' } }
+      : { '@context': 'https://schema.org', '@type': 'LocalBusiness', name: 'CÔNG TY TNHH SX TM DV ĐÀ LẠT NEW', url: siteUrl, description: page.description, areaServed: { '@type': 'City', name: 'Đà Lạt' }, address: { '@type': 'PostalAddress', streetAddress: 'Thôn Tân Lợi', addressLocality: 'Xã Đinh Văn Lâm Hà', addressRegion: 'Tỉnh Lâm Đồng', addressCountry: 'VN' } };
     let script = document.head.querySelector('script[data-greennest-schema]');
     if (!script) {
       script = document.createElement('script');
@@ -323,6 +353,7 @@ function useCart() {
 }
 
 function ProductCard({ product, onAddToCart }) {
+  const ratingSummary = getRatingSummary(product.id);
   return (
     <article className="product-card">
       <div className="product-image-wrap">
@@ -336,6 +367,11 @@ function ProductCard({ product, onAddToCart }) {
         <h3>{product.name}</h3>
         <p>{product.description}</p>
         <small className="product-specs">Kích thước: {product.size.join(', ')} · SKU: GN-{product.id}</small>
+                <div className="product-rating" aria-label={`Đánh giá ${ratingSummary.rating.toFixed(1)} trên 5 sao`}>
+                  <span className="rating-stars" aria-hidden="true">{'★'.repeat(Math.round(ratingSummary.rating))}</span>
+                  <span>{ratingSummary.rating.toFixed(1)}/5 · {ratingSummary.count} đánh giá</span>
+                </div>
+                <p className="product-review-snippet">“{productReviews[product.id]?.[0]?.comment}”</p>
         <div className="product-badges">
           {product.badges.map((badge) => (
             <span key={badge}>{badge}</span>
@@ -354,6 +390,54 @@ function ProductCard({ product, onAddToCart }) {
         </div>
       </div>
     </article>
+  );
+}
+
+function ProductReviews({ product }) {
+  const [reviews, setReviews] = useState(() => getProductReviews(product.id));
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState('');
+
+  const submitReview = (event) => {
+    event.preventDefault();
+    const trimmedComment = comment.trim();
+    if (!trimmedComment) return;
+    const nextReview = { name: 'Khách hàng GreenNest', rating, comment: trimmedComment };
+    const defaultReviewCount = productReviews[product.id]?.length || 0;
+    localStorage.setItem(`greennest-reviews-${product.id}`, JSON.stringify([...reviews.slice(defaultReviewCount), nextReview]));
+    setReviews((current) => [...current, nextReview]);
+    setComment('');
+    setRating(5);
+  };
+
+  return (
+    <section className="product-reviews" aria-labelledby="reviews-heading">
+      <div className="section-header compact-header">
+        <div>
+          <h2 id="reviews-heading">Đánh giá từ khách hàng</h2>
+          <p className="section-note">Chia sẻ trải nghiệm thực tế để giúp khách hàng khác chọn sản phẩm phù hợp.</p>
+        </div>
+      </div>
+      <div className="review-layout">
+        <div className="review-list">
+          {reviews.map((review, index) => (
+            <article className="review-item" key={`${review.name}-${index}`}>
+              <div><strong>{review.name}</strong><span className="rating-stars" aria-label={`${review.rating} trên 5 sao`}>{'★'.repeat(review.rating)}<span className="muted-stars">{'★'.repeat(5 - review.rating)}</span></span></div>
+              <p>{review.comment}</p>
+            </article>
+          ))}
+        </div>
+        <form className="review-form" onSubmit={submitReview}>
+          <h3>Đánh giá sản phẩm</h3>
+          <div className="star-picker" role="group" aria-label="Chọn số sao">
+            {[1, 2, 3, 4, 5].map((value) => <button key={value} type="button" className={value <= rating ? 'star-button selected' : 'star-button'} onClick={() => setRating(value)} aria-label={`${value} sao`}><Star size={21} fill="currentColor" /></button>)}
+          </div>
+          <label htmlFor={`review-${product.id}`}>Nhận xét của bạn</label>
+          <textarea id={`review-${product.id}`} value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Sản phẩm có phù hợp với không gian của bạn không?" required />
+          <button type="submit">Gửi đánh giá</button>
+        </form>
+      </div>
+    </section>
   );
 }
 
@@ -512,6 +596,8 @@ function ProductDetailPage() {
         </div>
       </section>
 
+      <ProductReviews product={product} />
+
       {relatedProducts.length > 0 && (
         <section className="related-products">
           <div className="section-header compact-header">
@@ -616,12 +702,12 @@ function HomePage() {
             <span className="hero-badge">Chi nhánh Lâm Đồng</span>
             <h1>CÔNG TY TNHH SX TM DV ĐÀ LẠT NEW</h1>
             <p>Địa chỉ: Thôn Tân Lợi, Xã Đinh Văn Lâm Hà, Tỉnh Lâm Đồng, Việt Nam</p>
-            <div className="hero-actions">
-              <Link to="/cua-hang" className="primary-btn">Xem cửa hàng</Link>
-              <Link to="/lien-he" className="secondary-btn">Liên hệ công ty</Link>
-            </div>
           </div>
         </RevealSection>
+        <div className="hero-actions hero-actions-below" aria-label="Khám phá GreenNest">
+          <Link to="/cua-hang" className="primary-btn">Xem cửa hàng</Link>
+          <Link to="/lien-he" className="secondary-btn">Liên hệ công ty</Link>
+        </div>
       </section>
 
       <RevealSection className="feature-showcase" delay={80}>
@@ -1091,6 +1177,17 @@ function Footer() {
   );
 }
 
+function FloatingContact() {
+  return (
+    <aside className="floating-contact" aria-label="Kênh liên hệ nhanh">
+      <a className="floating-contact-button phone" href="tel:" aria-label="Gọi điện: số điện thoại chờ cập nhật" title="Gọi điện: chờ cập nhật số"><Phone size={21} aria-hidden="true" /></a>
+      <a className="floating-contact-button zalo" href="https://zalo.me" target="_blank" rel="noreferrer" aria-label="Nhắn Zalo" title="Nhắn Zalo"><MessageCircle size={21} aria-hidden="true" /></a>
+      <a className="floating-contact-button facebook" href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Mở Facebook" title="Mở Facebook"><Share2 size={21} aria-hidden="true" /></a>
+      <a className="floating-contact-button whatsapp" href="https://wa.me" target="_blank" rel="noreferrer" aria-label="Nhắn WhatsApp" title="Nhắn WhatsApp"><Send size={20} aria-hidden="true" /></a>
+    </aside>
+  );
+}
+
 function AppLayout() {
   const { cart } = useCart();
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -1141,6 +1238,7 @@ function AppLayout() {
       </div>
 
       <Footer />
+      <FloatingContact />
     </div>
   );
 }
