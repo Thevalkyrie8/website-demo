@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
+    "build": "node scripts/build-pages.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "server": "node server/index.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:legacy": "vite build"
   },
   "dependencies": {
     "cors": "^2.8.5",

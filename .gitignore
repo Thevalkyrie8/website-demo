@@ -4,3 +4,10 @@ dist/
 .env.*
 !.env.example
 .DS_Store
+
+
+.pages-build/
+plant-shop/**/.next/
+*.tsbuildinfo
+.env*
+!.env.example
