@@ -6,6 +6,8 @@ export function generateStaticParams() {
   return stories.map((story) => ({ slug: story.slug }));
 }
 
+export function generateMetadata({params}:{params:{slug:string}}){const s=stories.find(s=>s.slug===params.slug);return {title:(s?.title||'Cẩm nang')+' | Plant Shop',description:s?.excerpt,alternates:{canonical:'https://thevalkyrie8.github.io/website-demo/bai-viet/'+params.slug+'/'}}}
+
 export default async function StoryDetailPage({ params }: { params: { slug: string } }) {
   const story = stories.find((item) => item.slug === params.slug);
   if (!story) notFound();

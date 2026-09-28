@@ -8,7 +8,7 @@ import { ThemeRuntime } from '@/components/layout/ThemeRuntime';
 export default function StorefrontLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="site-shell">
-      <ThemeRuntime />
+
       <Header />
       <main>{children}</main>
       <ContactWidget />

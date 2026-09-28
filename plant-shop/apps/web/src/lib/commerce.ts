@@ -1,0 +1,13 @@
+import { catalogProducts, StoreProduct } from '@/features/products/catalog';
+export const CART_KEY='plant_shop_cart_v2';
+export const SALE_KEY='plant_shop_flash_sale_v1';
+export type Campaign={title:string;enabled:boolean;start:string;end:string;items:Record<string,number>};
+export const defaultCampaign:Campaign={title:'Góc xanh, giá dễ thương',enabled:true,start:'2026-09-28T00:00:00+07:00',end:'2026-10-05T23:59:59+07:00',items:{'PS-CAY-001':359000,'PS-CAY-002':259000,'PS-CAY-006':119000,'PS-VTU-001':209000}};
+export function saleStatus(c:Campaign,now:number){if(!c.enabled)return 'off';if(now<Date.parse(c.start))return 'scheduled';if(now>=Date.parse(c.end))return 'ended';return 'active';}
+export function priceFor(p:StoreProduct,c:Campaign,now:number){const sale=c.items[p.sku||''];return saleStatus(c,now)==='active'&&Number.isFinite(sale)&&sale>0&&sale<p.price?sale:p.price;}
+export function readCampaign():Campaign {if(typeof window==='undefined')return defaultCampaign;try{const c=JSON.parse(localStorage.getItem(SALE_KEY)||'null');return c&&typeof c.title==='string'&&typeof c.enabled==='boolean'&&Number.isFinite(Date.parse(c.start))&&Number.isFinite(Date.parse(c.end))&&c.items&&typeof c.items==='object'?c:defaultCampaign;}catch{return defaultCampaign;}}
+export type CartLine={id:string;sku:string;quantity:number;parentSku?:string};
+export function readCart():CartLine[]{if(typeof window==='undefined')return [];try{const c=JSON.parse(localStorage.getItem(CART_KEY)||'[]');return Array.isArray(c)?c.filter(i=>catalogProducts.some(p=>p.sku===i.sku)&&Number.isInteger(i.quantity)&&i.quantity>0):[];}catch{return [];}}
+export function saveCart(lines:CartLine[]){localStorage.setItem(CART_KEY,JSON.stringify(lines));window.dispatchEvent(new Event('plant-shop-cart-updated'));}
+export function addLines(requests:{sku:string;quantity:number;parentSku?:string}[]){const current=readCart();const next=current.map(x=>({...x}));for(const r of requests){const p=catalogProducts.find(x=>x.sku===r.sku);if(!p||!p.price||!Number.isInteger(r.quantity)||r.quantity<1)throw new Error('Sản phẩm hoặc số lượng không hợp lệ.');const existing=next.filter(x=>x.sku===r.sku).reduce((n,x)=>n+x.quantity,0);if(existing+r.quantity>(p.stock??0))throw new Error(`${p.name}: chỉ còn ${p.stock??0} sản phẩm, giỏ đã có ${existing}.`);const id=r.sku+(r.parentSku?':'+r.parentSku:'');const line=next.find(x=>x.id===id);if(line)line.quantity+=r.quantity;else next.push({id,...r});}saveCart(next);}
+export function track(event:string,data:Record<string,unknown>={}){if(typeof window==='undefined')return;const w=window as unknown as {dataLayer?:unknown[]};(w.dataLayer??=[]).push({event,...data});}

@@ -24,7 +24,7 @@ function walk(dir) {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) walk(path);
     else if (/\.(tsx?|css)$/.test(path)) {
-      let source = readFileSync(path, 'utf8').replaceAll('/assets/', `${base}/assets/`);
+      let source = readFileSync(path, 'utf8').replace(/(?<!\/website-demo)\/assets\//g, `${base}/assets/`);
       // Next Link adds basePath itself; plain anchors and location do not.
       source = source.replace(/(<a\b[^>]*\bhref=")\/(?!\/)/g, `$1${base}/`);
       source = source.replace(/(window\.location\.href\s*=\s*['"`])\/(?!\/)/g, `$1${base}/`);
@@ -33,15 +33,7 @@ function walk(dir) {
   }
 }
 walk(join(stage, 'src'));
-const productPage = 'src/app/(storefront)/san-pham/[slug]/page.tsx';
-cpSync(join(stage, productPage), join(stage, 'src/components/storefront/ProductDetailPage.tsx'));
-writeFileSync(join(stage, productPage), `import ProductDetailPage from '@/components/storefront/ProductDetailPage';
-import { catalogProducts, productSlug } from '@/features/products/catalog';
-export function generateStaticParams() { return catalogProducts.map(p => ({ slug: productSlug(p.name) })); }
-export default function Page({ params }: { params: { slug: string } }) { return <ProductDetailPage params={params} />; }
-`);
 edit('src/app/layout.tsx', s => s.replace("description: 'Cửa hàng", "robots: { index: false, follow: false },\n  description: 'Cửa hàng").replace('<body>{children}</body>', '<body><div role="note" style={{background:"#173d2c",color:"white",textAlign:"center",padding:"9px 16px",fontSize:12}}>Bản demo để duyệt giao diện · Chưa tiếp nhận đơn hàng hoặc thanh toán thật.</div>{children}</body>'));
-edit('src/app/(storefront)/dat-hang/page.tsx', s => s.replace('event.preventDefault();', "event.preventDefault();\n    if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') { setSubmitMessage('Đây là bản demo giao diện. Chức năng gửi đơn sẽ hoạt động sau khi kết nối máy chủ.');\n    return; }"));
 edit('src/app/(storefront)/lien-he/page.tsx', s => s.replace('event.preventDefault();', "event.preventDefault(); if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') { setNotice('Bản demo chưa gửi yêu cầu tư vấn. Thông tin chưa được chuyển đến cửa hàng.'); return; }"));
 edit('src/components/auth/CustomerAuthForm.tsx', s => s.replace('event.preventDefault();', "event.preventDefault();\n    if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') { setForgotMessage('Bản demo giao diện: đăng nhập và đăng ký sẽ hoạt động khi kết nối máy chủ.');\n    return; }").replace('Liên kết khôi phục sẽ được gửi đến thông tin tài khoản của bạn.', 'Bản demo chưa hỗ trợ khôi phục tài khoản.'));
 writeFileSync(join(stage, 'src/app/robots.ts'), `export default function robots() { return { rules: { userAgent: '*', disallow: '/' } }; }\n`);

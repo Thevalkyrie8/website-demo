@@ -1,13 +1,1 @@
-export function Footer() {
-  return (
-    <footer className="site-footer">
-      <div className="container footer-grid">
-        <div><div className="footer-brand">Plant Shop</div><p>Một góc xanh được chăm chút cho ngôi nhà và nhịp sống của bạn.</p></div>
-        <div><span className="footer-label">Khám phá</span><a href="/cua-hang">Cửa hàng</a><a href="/dich-vu">Dịch vụ</a></div>
-        <div><span className="footer-label">Ghé thăm</span><p>24 Nguyễn Thị Minh Khai<br />Quận 1, TP. Hồ Chí Minh</p></div>
-        <div><span className="footer-label">Kết nối</span><p>Thứ 2 - Chủ nhật<br />08:00 - 20:00</p></div>
-      </div>
-      <div className="container footer-bottom">© 2026 Plant Shop <span>Chăm cây. Chăm nhà. Chăm mình.</span></div>
-    </footer>
-  );
-}
+import Link from 'next/link';export function Footer(){return <footer className="ps-footer"><div className="ps-wrap ps-footer-grid"><div><Link className="ps-logo" href="/">plant<span>shop.</span></Link><p>Cây xanh, hoa tươi & những điều dịu dàng.<br/>Nuôi một góc xanh. Yêu thêm cuộc sống.</p><small>Bản trình diễn · Hình ảnh, giá và tồn kho minh họa.</small></div><div><b>Khám phá</b><Link href="/cay-canh">Cây xanh & bonsai</Link><Link href="/hoa-qua-tang">Hoa & quà tặng</Link><Link href="/chau-vat-tu">Chậu & vật tư</Link><Link href="/dich-vu">Dịch vụ cảnh quan</Link></div><div><b>Đồng hành cùng bạn</b><Link href="/huong-dan">Hướng dẫn mua hàng</Link><Link href="/chinh-sach">Giao hàng & đổi trả</Link><Link href="/bao-mat">Bảo mật thông tin</Link><Link href="/bai-viet">Cẩm nang chăm cây</Link></div><div><b>Kết nối</b><Link href="/gioi-thieu">Câu chuyện Plant Shop</Link><Link href="/doi-tac">Hợp tác doanh nghiệp</Link><Link href="/lien-he">Liên hệ tư vấn</Link><Link href="/truyen-thong">Góc truyền thông</Link></div></div><div className="ps-wrap ps-footer-bottom"><span>© 2026 Plant Shop · Made to grow.</span><span>Thông tin doanh nghiệp & chính sách đang chờ xác nhận.</span></div></footer>}

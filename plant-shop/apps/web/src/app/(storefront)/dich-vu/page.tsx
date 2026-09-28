@@ -43,6 +43,7 @@ export default function ServicesPage() {
     setImageName(file.name);
     setUploadProgress(8);
     setUploadedUrl('');
+    if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') { setUploadedUrl(URL.createObjectURL(file)); setUploadProgress(100); setNotice('Ảnh chỉ xem trước trên thiết bị, chưa tải lên cửa hàng.'); return; }
     const data = new FormData();
     data.append('file', file);
     const request = new XMLHttpRequest();
@@ -77,6 +78,7 @@ export default function ServicesPage() {
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (process.env.NEXT_PUBLIC_DEMO_MODE === 'true') { setNotice('Bản demo chưa gửi yêu cầu báo giá. Thông tin chưa được chuyển đến cửa hàng.'); return; }
     const existing = JSON.parse(window.localStorage.getItem('plant_shop_consultations') || '[]') as Array<Record<string, unknown>>;
     existing.unshift({
       id: `quote-${Date.now()}`,
